@@ -1,6 +1,19 @@
 # flutter_pip
 
-Simple plugin to implement Picture in Picture support.
+Simple plugin to implement Picture in Picture support for Android only.
+
+## Android Setup
+
+You need to declare that your all supports Picture in Picture mode by adding
+to your AndroidManifest.xml the following line:
+
+```xml
+<activity
+    ...
+    android:supportsPictureInPicture="true"
+    ...>
+</activity>
+```
 
 ## Enter Picture in Picture mode:
 
@@ -10,6 +23,21 @@ int result = await FlutterPip.enterPictureInPictureMode();
 
 If the result returns 0, the app has entered PiP mode successfully, if it return 1 then
 most probably this indicates that the device does not support PiP mode.
+
+This function supports an optional parameter of type `PipRatio`, for example:
+
+```dart
+int result = await FlutterPip.enterPictureInPictureMode(
+    PipRatio(
+        width: ...
+        height: ...
+    )
+);
+```
+
+Default values for `pipRatio` are `width: 16` and `height: 9`. You also need to take in
+consideration that PiP mode only supports a value range from 0.418410 to 2.390000 for Aspect Ratio,
+going anything bellow the minimum or above the maximum will throw a `PipRatioException` exception.
 
 ## To check whether the app is on Picture in Picture mode:
 
