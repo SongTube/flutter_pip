@@ -4,7 +4,7 @@ Simple plugin to implement Picture in Picture support for Android only.
 
 ## Android Setup
 
-You need to declare that your all supports Picture in Picture mode by adding
+You need to declare that your app supports Picture in Picture mode by adding
 to your AndroidManifest.xml the following line:
 
 ```xml
