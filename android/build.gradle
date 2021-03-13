@@ -1,0 +1,39 @@
+group 'com.artxdev.flutter_pip'
+version '1.0'
+
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:4.1.0'
+    }
+}
+
+rootProject.allprojects {
+    repositories {
+        google()
+        jcenter()
+        // Comment this if you're building Release, this is for Android Studio indexing
+        // maven {
+        //     url 'http://download.flutter.io'
+        // }
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 30
+
+    defaultConfig {
+        minSdkVersion 22
+    }
+
+    dependencies {
+        // Comment this if you're building Release, this is for Android Studio indexing
+        // api "io.flutter:flutter_embedding_debug:1.0.0-d4453f601890ec682bbf8f5659b70f15cce1d67d"
+    }
+}
