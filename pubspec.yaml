@@ -1,7 +1,7 @@
 name: flutter_pip
-description: A new flutter plugin project.
+description: Simple plugin to implement Picture in Picture support.
 version: 0.0.1
-author:
+author: Artx
 homepage:
 
 environment:
