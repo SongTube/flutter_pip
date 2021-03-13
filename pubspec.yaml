@@ -2,7 +2,7 @@ name: flutter_pip
 description: Simple plugin to implement Picture in Picture support.
 version: 0.0.1
 author: Artx
-homepage:
+homepage: https://github.com/Artx-II/flutter_pip
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
