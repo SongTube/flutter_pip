@@ -6,33 +6,31 @@ class PipWidget extends StatefulWidget {
   final Widget child;
   final Function(bool) onResume;
   final Function onSuspending;
-  PipWidget({
-    @required this.child,
-    this.onResume,
-    this.onSuspending
-  });
+  PipWidget({@required this.child, this.onResume, this.onSuspending});
   @override
   _PipWidgetState createState() => _PipWidgetState();
 }
 
 class _PipWidgetState extends State<PipWidget> with WidgetsBindingObserver {
-
+  WidgetsBindingObserver observer;
   @override
   void initState() {
+    observer = new LifecycleEventHandler(resumeCallBack: () async {
+      bool isInPipMode = await FlutterPip.isInPictureInPictureMode();
+      widget.onResume(isInPipMode);
+      return;
+    }, suspendingCallBack: () {
+      widget.onSuspending();
+      return;
+    });
     super.initState();
-    WidgetsBinding.instance.addObserver(
-      new LifecycleEventHandler(
-        resumeCallBack: () async {
-          bool isInPipMode = await FlutterPip.isInPictureInPictureMode();
-          widget.onResume(isInPipMode);
-          return;
-        },
-        suspendingCallBack: () {
-          widget.onSuspending();
-          return;
-        }
-      )
-    );
+    WidgetsBinding.instance.addObserver(observer);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(observer);
+    super.dispose();
   }
 
   @override
@@ -45,10 +43,7 @@ class LifecycleEventHandler extends WidgetsBindingObserver {
   final AsyncCallback resumeCallBack;
   final AsyncCallback suspendingCallBack;
 
-  LifecycleEventHandler({
-    this.resumeCallBack,
-    this.suspendingCallBack
-  });
+  LifecycleEventHandler({this.resumeCallBack, this.suspendingCallBack});
 
   @override
   Future<Null> didChangeAppLifecycleState(AppLifecycleState state) async {
