@@ -2,6 +2,7 @@ package com.artxdev.flutter_pip;
 
 import androidx.annotation.NonNull;
 
+import android.app.Activity;
 import android.app.PictureInPictureParams;
 import android.os.Build;
 import android.util.Rational;
@@ -21,7 +22,7 @@ public class FlutterPipPlugin implements FlutterPlugin, MethodCallHandler, Activ
   /// This local reference serves to register the plugin with the Flutter Engine and unregister it
   /// when the Flutter Engine is detached from the Activity
   private MethodChannel channel;
-  private static ActivityPluginBinding activityPluginBinding;
+  private Activity activity;
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
@@ -39,7 +40,7 @@ public class FlutterPipPlugin implements FlutterPlugin, MethodCallHandler, Activ
         PictureInPictureParams params = new PictureInPictureParams.Builder()
                 .setAspectRatio(aspectRatio)
                 .build();
-        activityPluginBinding.getActivity().enterPictureInPictureMode();
+        activity.enterPictureInPictureMode();
         result.success(0);
       } else {
         result.success(1);
@@ -48,7 +49,7 @@ public class FlutterPipPlugin implements FlutterPlugin, MethodCallHandler, Activ
     if (call.method.equals("isInPictureInPictureMode")) {
       boolean isInPictureInPictureMode = false;
       if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
-        isInPictureInPictureMode = activityPluginBinding.getActivity().isInPictureInPictureMode();
+        isInPictureInPictureMode = activity.isInPictureInPictureMode();
       }
       result.success(isInPictureInPictureMode);
     }
@@ -61,14 +62,16 @@ public class FlutterPipPlugin implements FlutterPlugin, MethodCallHandler, Activ
 
   @Override
   public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
-    activityPluginBinding = binding;
+    activity = binding.getActivity();
   }
 
   @Override
   public void onDetachedFromActivityForConfigChanges() {}
 
   @Override
-  public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {}
+  public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
+    activity = binding.getActivity();
+  }
 
   @Override
   public void onDetachedFromActivity() {}
