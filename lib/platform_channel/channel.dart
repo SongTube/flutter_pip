@@ -11,7 +11,7 @@ class FlutterPip {
   static const MethodChannel _channel =
       const MethodChannel('flutter_pip');
 
-  static Future<int> enterPictureInPictureMode({PipRatio pipRatio}) async {
+  static Future<int?> enterPictureInPictureMode({PipRatio? pipRatio}) async {
     PipRatio ratio = pipRatio != null ? pipRatio : PipRatio();
     if (ratio.aspectRatio < 0.418410 || ratio.aspectRatio > 2.390000)
       throw PipRatioException.extremeRatio();
@@ -21,7 +21,7 @@ class FlutterPip {
     );
   }
 
-  static Future<bool> isInPictureInPictureMode() async {
+  static Future<bool?> isInPictureInPictureMode() async {
     return await _channel.invokeMethod('isInPictureInPictureMode');
   }
 

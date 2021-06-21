@@ -4,32 +4,32 @@ import 'package:flutter_pip/platform_channel/channel.dart';
 
 class PipWidget extends StatefulWidget {
   final Widget child;
-  final Function(bool) onResume;
-  final Function onSuspending;
-  PipWidget({@required this.child, this.onResume, this.onSuspending});
+  final Function(bool?)? onResume;
+  final Function? onSuspending;
+  PipWidget({required this.child, this.onResume, this.onSuspending});
   @override
   _PipWidgetState createState() => _PipWidgetState();
 }
 
 class _PipWidgetState extends State<PipWidget> with WidgetsBindingObserver {
-  WidgetsBindingObserver observer;
+  late WidgetsBindingObserver observer;
   @override
   void initState() {
     observer = new LifecycleEventHandler(resumeCallBack: () async {
-      bool isInPipMode = await FlutterPip.isInPictureInPictureMode();
-      widget.onResume(isInPipMode);
+      bool? isInPipMode = await FlutterPip.isInPictureInPictureMode();
+      widget.onResume!(isInPipMode);
       return;
     }, suspendingCallBack: () {
-      widget.onSuspending();
+      widget.onSuspending!();
       return;
-    });
+    } as Future<void> Function()?);
     super.initState();
-    WidgetsBinding.instance.addObserver(observer);
+    WidgetsBinding.instance!.addObserver(observer);
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(observer);
+    WidgetsBinding.instance!.removeObserver(observer);
     super.dispose();
   }
 
@@ -40,8 +40,8 @@ class _PipWidgetState extends State<PipWidget> with WidgetsBindingObserver {
 }
 
 class LifecycleEventHandler extends WidgetsBindingObserver {
-  final AsyncCallback resumeCallBack;
-  final AsyncCallback suspendingCallBack;
+  final AsyncCallback? resumeCallBack;
+  final AsyncCallback? suspendingCallBack;
 
   LifecycleEventHandler({this.resumeCallBack, this.suspendingCallBack});
 
@@ -50,14 +50,14 @@ class LifecycleEventHandler extends WidgetsBindingObserver {
     switch (state) {
       case AppLifecycleState.resumed:
         if (resumeCallBack != null) {
-          await resumeCallBack();
+          await resumeCallBack!();
         }
         break;
       case AppLifecycleState.inactive:
       case AppLifecycleState.paused:
       case AppLifecycleState.detached:
         if (suspendingCallBack != null) {
-          await suspendingCallBack();
+          await suspendingCallBack!();
         }
         break;
     }
