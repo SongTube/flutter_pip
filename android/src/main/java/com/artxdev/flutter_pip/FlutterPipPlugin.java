@@ -2,8 +2,11 @@ package com.artxdev.flutter_pip;
 
 import androidx.annotation.NonNull;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.PictureInPictureParams;
+import android.content.pm.PackageManager;
+import android.graphics.Rect;
 import android.os.Build;
 import android.util.Rational;
 
@@ -23,13 +26,13 @@ public class FlutterPipPlugin implements FlutterPlugin, MethodCallHandler, Activ
   /// when the Flutter Engine is detached from the Activity
   private MethodChannel channel;
   private Activity activity;
-
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
     channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "flutter_pip");
     channel.setMethodCallHandler(this);
   }
 
+  @TargetApi(Build.VERSION_CODES.N)
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
     if (call.method.equals("enterPictureInPictureMode")) {
@@ -40,7 +43,7 @@ public class FlutterPipPlugin implements FlutterPlugin, MethodCallHandler, Activ
         PictureInPictureParams params = new PictureInPictureParams.Builder()
                 .setAspectRatio(aspectRatio)
                 .build();
-        activity.enterPictureInPictureMode();
+        activity.enterPictureInPictureMode(params);
         result.success(0);
       } else {
         result.success(1);
@@ -53,6 +56,9 @@ public class FlutterPipPlugin implements FlutterPlugin, MethodCallHandler, Activ
       }
       result.success(isInPictureInPictureMode);
     }
+    if (call.method.equals("isPictureInPictureSupported")) {
+      result.success(activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE));
+    }
   }
 
   @Override
@@ -63,6 +69,7 @@ public class FlutterPipPlugin implements FlutterPlugin, MethodCallHandler, Activ
   @Override
   public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
     activity = binding.getActivity();
+
   }
 
   @Override

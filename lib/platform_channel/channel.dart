@@ -25,4 +25,8 @@ class FlutterPip {
     return await _channel.invokeMethod('isInPictureInPictureMode');
   }
 
+  static Future<bool?> isPictureInPictureSupported() async {
+    return await _channel.invokeMethod('isPictureInPictureSupported');
+  }
+
 }
